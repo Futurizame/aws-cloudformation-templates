@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: "AWS Organizations using Cloudformation - Creates OU, nested OU, account and organizations policies"
+
+Parameters:
+  OrganizationRoot:
+    Description: 'Organization ID'
+    Type: String
+  UnitName:
+    Description: 'OrganizationalUnit name'
+    Type: String
+  Email:
+    Description: 'Email to create accounts'
+    Type: String
+
+Resources:
+  OrganizationalUnit:
+    Type: AWS::Organizations::OrganizationalUnit
+    Properties:
+      Name: !Ref UnitName
+      ParentId: !Ref OrganizationRoot
+
+  Qa:
+    Type: AWS::Organizations::Account
+    Properties:
+      AccountName: !Sub "${UnitName}-qa"
+      Email: !Sub
+        - "${Usr}+${UnitName}-qa@${Domain}"
+        - Usr: !Select [0, !Split ["@", !Ref Email]]
+          Domain: !Select [1, !Split ["@", !Ref Email]]
+      ParentIds:
+        - !Ref OrganizationalUnit
