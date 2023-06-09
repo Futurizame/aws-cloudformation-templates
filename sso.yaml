@@ -16,10 +16,10 @@ Resources:
   DevPermissionSet:
     Type: AWS::SSO::PermissionSet
     Properties:
-      Name: "Developer"
+      Name: "DeveloperPermissionSet"
       Description: "Developer access to AWS organization"
       InstanceArn: !Ref AwsSsoArn
-      SessionDuration: "PT1H"
+      SessionDuration: "PT2H"
       InlinePolicy:
         Version: "2012-10-17"
         Statement:
@@ -33,7 +33,8 @@ Resources:
               - "lambda:*"
               - "logs:*"
               - "s3:*"
-            Resource: "*"
+            Resource:
+              - "*"
 
   DevAssignment:
     Type: AWS::SSO::Assignment
@@ -44,7 +45,3 @@ Resources:
       PrincipalType: GROUP
       TargetId: !Ref AccountId
       TargetType: "AWS_ACCOUNT"
-
-849532005541
-Developer
-arn:aws:sso:::instance/ssoins-7223725feea7fac4
