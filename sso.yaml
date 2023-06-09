@@ -24,15 +24,15 @@ Resources:
         Version: "2012-10-17"
         Statement:
           - Sid: "DeveloperDefaultAccess"
-            Effect: Allow
+            Effect: "Allow"
             Action:
-              - account:ListRegions
-              - cloudformation:*
-              - cloudwatch:*
-              - dynamodb:*
-              - lambda:*
-              - logs:*
-              - s3:*
+              - "account:ListRegions"
+				      - "cloudformation:*"
+				      - "cloudwatch:*"
+				      - "dynamodb:*"
+				      - "lambda:*"
+				      - "logs:*"
+				      - "s3:*"
             Resource: "*"
 
   DevAssignment:
