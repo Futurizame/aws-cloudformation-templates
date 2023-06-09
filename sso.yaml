@@ -21,17 +21,19 @@ Resources:
       InstanceArn: !Ref AwsSsoArn
       SessionDuration: "PT1H"
       InlinePolicy:
-        - Sid: "DeveloperDefaultAccess"
-          Effect: Allow
-          Action:
-            - account:ListRegions
-            - cloudformation:*
-            - cloudwatch:*
-            - dynamodb:*
-            - lambda:*
-            - logs:*
-            - s3:*
-          Resource: "*"
+        Version: "2012-10-17"
+        Statement:
+          - Sid: "DeveloperDefaultAccess"
+            Effect: Allow
+            Action:
+              - account:ListRegions
+              - cloudformation:*
+              - cloudwatch:*
+              - dynamodb:*
+              - lambda:*
+              - logs:*
+              - s3:*
+            Resource: "*"
 
   DevAssignment:
     Type: AWS::SSO::Assignment
