@@ -8,15 +8,45 @@ Parameters:
   AccountId:
     Description: "Account id"
     Type: String
+  AdminGroupId:
+    Description: "Admin group id"
+    Type: String
   DeveloperGroupId:
     Description: "Developer group id"
     Type: String
 
 Resources:
+  AdminPermissionSet:
+    Type: AWS::SSO::PermissionSet
+    Properties:
+      Name: "Admin"
+      Description: "Admin access to AWS organization"
+      InstanceArn: !Ref AwsSsoArn
+      SessionDuration: "PT1H"
+      InlinePolicy:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: "AdminDefaultAccess"
+            Effect: "Allow"
+            Action:
+              - "*"
+            Resource:
+              - "*"
+
+  AdminAssignment:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref AwsSsoArn
+      PermissionSetArn: !GetAtt AdminPermissionSet.PermissionSetArn
+      PrincipalId: !Ref AdminGroupId
+      PrincipalType: GROUP
+      TargetId: !Ref AccountId
+      TargetType: "AWS_ACCOUNT"
+
   DevPermissionSet:
     Type: AWS::SSO::PermissionSet
     Properties:
-      Name: "DeveloperPermissionSet"
+      Name: "Developer"
       Description: "Developer access to AWS organization"
       InstanceArn: !Ref AwsSsoArn
       SessionDuration: "PT2H"
