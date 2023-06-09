@@ -37,7 +37,7 @@ Resources:
     Type: AWS::SSO::Assignment
     Properties:
       InstanceArn: !Ref AwsSsoArn
-      PermissionSetArn: !GetAll DevPermissionSet.PermissionSetArn
+      PermissionSetArn: !GetAtt DevPermissionSet.PermissionSetArn
       PrincipalId: !Ref DeveloperGroupId
       PrincipalType: GROUP
       TargetId: !Ref AccountId
