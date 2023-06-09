@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Permissions"
+
+Parameters:
+  AwsSsoArn:
+    Description: "AWS SSO ARN"
+    Type: String
+  AccountId:
+    Description: "Account id"
+    Type: String
+  DeveloperGroupId:
+    Description: "Developer group id"
+    Type: String
+
+Resources:
+  DevPermissionSet:
+    Type: AWS::SSO::PermissionSet
+    Properties:
+      Name: "Developer"
+      Description: "Developer access to AWS organization"
+      InstanceArn: !Ref AwsSsoArn
+      SessionDuration: "PT1H"
+      InlinePolicy:
+        - Sid: "DeveloperDefaultAccess"
+          Effect: Allow
+          Action:
+            - account:ListRegions
+            - cloudformation:*
+            - cloudwatch:*
+            - dynamodb:*
+            - lambda:*
+            - logs:*
+            - s3:*
+          Resource: "*"
+
+  DevAssignment:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref AwsSsoArn
+      PermissionSetArn: !GetAll DevPermissionSet.PermissionSetArn
+      PrincipalId: !Ref DeveloperGroupId
+      PrincipalType: GROUP
+      TargetId: !Ref AccountId
+      TargetType: "AWS_ACCOUNT"
