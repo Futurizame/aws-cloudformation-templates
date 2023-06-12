@@ -43,6 +43,16 @@ Resources:
       TargetId: !Ref AccountId
       TargetType: "AWS_ACCOUNT"
 
+  RootAdminAssigment:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref AwsSsoArn
+      PermissionSetArn: !GetAtt AdminPermissionSet.PermissionSetArn
+      PrincipalId: !Ref AdminGroupId
+      PrincipalType: GROUP
+      TargetId: !Ref "AWS::AccountId"
+      TargetType: "AWS_ACCOUNT"
+
   DevPermissionSet:
     Type: AWS::SSO::PermissionSet
     Properties:
@@ -63,6 +73,13 @@ Resources:
               - "lambda:*"
               - "logs:*"
               - "s3:*"
+            Resource:
+              - "*"
+          - Sid: "DeveloperIamAccess"
+            Effect: Allow
+            Action:
+              - "iam:GetRole"
+              - "iam:ListRoles"
             Resource:
               - "*"
 
