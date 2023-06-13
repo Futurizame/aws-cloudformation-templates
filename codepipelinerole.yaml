@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "CodePipeline role"
+
+Parameters:
+  Stage:
+    Description: Stage
+    Type: String
+
+Resources:
+  CodePipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Description: "Role for CodePipeline, also works for CloudFormation"
+      RoleName: !Sub "root-${Stage}-CodePipelineRole"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - codepipeline.amazonaws.com
+                - cloudformation.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CodeBuildPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - codebuild:BatchGetBuilds
+                  - codebuild:StartBuild
+                Resource: "*"
+        - PolicyName: IAMPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - iam:PutRolePolicy
+                Resource: "*"
+
+Outputs:
+  RoleArn:
+    Description: CodePipeline role arn
+    Value: !GetAtt CodePipelineRole.Arn
+    Export:
+      Name: !Sub "root-${Stage}-CodePipelineRole"
