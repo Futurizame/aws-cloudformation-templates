@@ -22,14 +22,29 @@ Resources:
                 - cloudformation.amazonaws.com
             Action: sts:AssumeRole
       Policies:
+        - PolicyName: CodeStarConnectionsPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - codestar-connections:*
+                Resource: "*"
+        - PolicyName: CodePipelinePolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - codepipeline:*
+                Resource: "*"
         - PolicyName: CodeBuildPolicy
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
                 Action:
-                  - codebuild:BatchGetBuilds
-                  - codebuild:StartBuild
+                  - codebuild:*
                 Resource: "*"
         - PolicyName: IAMPolicy
           PolicyDocument:
@@ -37,7 +52,23 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
+                  - iam:PassRole
+                  - iam:CreateRole
+                  - iam:CreatePolicy
+                  - iam:DeleteRole
+                  - iam:DeletePolicy
+                  - iam:GetRole
+                  - iam:GetRolePolicy
+                  - iam:DeleteRolePolicy
                   - iam:PutRolePolicy
+                Resource: "*"
+        - PolicyName: S3Policy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:*
                 Resource: "*"
 
 Outputs:
