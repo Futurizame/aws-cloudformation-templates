@@ -66,6 +66,15 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess
         - arn:aws:iam::aws:policy/AWSLambda_ReadOnlyAccess
         - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+      InlinePolicy:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: "DynamoAccess"
+            Effect: Allow
+            Action:
+              - dynamodb:DeleteItem
+              - dynamodb:UpdateItem
+            Resource: "*"
 
   OperationsAssignment:
     Type: AWS::SSO::Assignment
@@ -91,6 +100,15 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess
         - arn:aws:iam::aws:policy/AWSLambda_ReadOnlyAccess
         - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+      InlinePolicy:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: "DynamoAccess"
+            Effect: Allow
+            Action:
+              - dynamodb:DeleteItem
+              - dynamodb:UpdateItem
+            Resource: "*"
 
   DevAssignment:
     Type: AWS::SSO::Assignment
