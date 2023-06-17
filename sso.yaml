@@ -11,6 +11,9 @@ Parameters:
   AdminGroupId:
     Description: "Admin group id"
     Type: String
+  OperationsGroupId:
+    Description: "Operations group id"
+    Type: String
   DeveloperGroupId:
     Description: "Developer group id"
     Type: String
@@ -22,7 +25,7 @@ Resources:
       Name: "Admin"
       Description: "Admin access to AWS organization"
       InstanceArn: !Ref AwsSsoArn
-      SessionDuration: "PT1H"
+      SessionDuration: "PT8H"
       InlinePolicy:
         Version: "2012-10-17"
         Statement:
@@ -53,21 +56,22 @@ Resources:
       TargetId: !Ref "AWS::AccountId"
       TargetType: "AWS_ACCOUNT"
 
-  DevPermissionSet:
+  OperationsPermissionSet:
     Type: AWS::SSO::PermissionSet
     Properties:
-      Name: "Developer"
-      Description: "Developer access to AWS organization"
+      Name: "Operations"
+      Description: "Operations access to AWS organization"
       InstanceArn: !Ref AwsSsoArn
-      SessionDuration: "PT2H"
+      SessionDuration: "PT8H"
+      ManagedPolicies:
+        - arn:aws:iam::aws:policy/IAMReadOnlyAccess
       InlinePolicy:
         Version: "2012-10-17"
         Statement:
-          - Sid: "DeveloperDefaultAccess"
+          - Sid: "OperationsDefaultAccess"
             Effect: "Allow"
             Action:
-              - "account:ListRegions"
-              - "cloudformation:*"
+              - "codepipeline:*"
               - "cloudwatch:*"
               - "dynamodb:*"
               - "lambda:*"
@@ -75,17 +79,36 @@ Resources:
               - "s3:*"
             Resource:
               - "*"
-          - Sid: "DeveloperCodePipelineAccess"
-            Effect: Allow
+
+  OperationsAssignment:
+    Type: AWS::SSO::Assignment
+    Properties:
+      InstanceArn: !Ref AwsSsoArn
+      PermissionSetArn: !GetAtt OperationsPermissionSet.PermissionSetArn
+      PrincipalId: !Ref OperationsGroupId
+      PrincipalType: GROUP
+      TargetId: !Ref AccountId
+      TargetType: "AWS_ACCOUNT"
+
+  DevPermissionSet:
+    Type: AWS::SSO::PermissionSet
+    Properties:
+      Name: "Developer"
+      Description: "Developer access to AWS organization"
+      InstanceArn: !Ref AwsSsoArn
+      SessionDuration: "PT8H"
+      InlinePolicy:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: "DeveloperDefaultAccess"
+            Effect: "Allow"
             Action:
-              - "codepipeline:ListPipelines"
-            Resource:
-              - "*"
-          - Sid: "DeveloperIamAccess"
-            Effect: Allow
-            Action:
-              - "iam:GetRole"
-              - "iam:ListRoles"
+              - "account:ListRegions"
+              - "cloudwatch:*"
+              - "dynamodb:*"
+              - "lambda:*"
+              - "logs:*"
+              - "s3:*"
             Resource:
               - "*"
 
